@@ -5,6 +5,7 @@ import axios from 'axios'
 import { Group, GoalListSpec, GoalFilter } from '../util/interfaces'
 
 import GoalList from '../GoalList/GoalList'
+import GoalListPanel from '../GoalList/GoalListPanel'
 
 const Home = () => {
     const [selectedSpec, setSelectedSpec] = useState<GoalListSpec>(GoalFilter.ALL)
@@ -44,7 +45,7 @@ const Home = () => {
                 </RadioGroup>
             </div>
             <div className="ml-40 mt-10">
-                <GoalList spec={selectedSpec} />
+                <GoalListPanel spec={selectedSpec} />
             </div>
 
         </>
