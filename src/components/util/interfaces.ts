@@ -1,5 +1,6 @@
 export interface GoalQueryResult {
     id: string
+    description: string
     completed: boolean
     groups: string[]
 }

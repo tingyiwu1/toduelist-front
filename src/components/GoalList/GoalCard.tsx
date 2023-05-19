@@ -11,16 +11,17 @@ import CreateCommitForm from './CreateCommitForm'
 
 interface GoalCardProps {
     goalId: string
+    description: string
+    completed: boolean
     showDelete: boolean
     editGoal: (goalId: string, description: string, completed: boolean) => Promise<void>
     deleteGoal: (goalId: string) => Promise<void>
 }
 
-const GoalCard = React.memo(({ goalId, showDelete, editGoal, deleteGoal }: GoalCardProps) => {
+const GoalCard = React.memo(({ goalId, showDelete, description, completed, editGoal, deleteGoal }: GoalCardProps) => {
 
     const [edit, setEdit] = useState<boolean>(false)
-    const [description, setDescription] = useState<string>('')
-    const [completed, setCompleted] = useState<boolean>(false)
+    const [descriptionInput, setDescriptionInput] = useState<string>(description)
     const [commits, setCommits] = useState<Commit[]>([])
     const [groups, setGroups] = useState<{ id: string, name: string }[]>([])
 
@@ -30,8 +31,6 @@ const GoalCard = React.memo(({ goalId, showDelete, editGoal, deleteGoal }: GoalC
             const res = await axios.post('goals/getGoal', {
                 id: goalId
             })
-            setDescription(res.data.description)
-            setCompleted(res.data.completed)
             setCommits(res.data.commits)
             setGroups(res.data.groups)
         }
@@ -40,8 +39,7 @@ const GoalCard = React.memo(({ goalId, showDelete, editGoal, deleteGoal }: GoalC
 
     const handleComplete = () => {
         const newCompleted = !completed
-        setCompleted(newCompleted)
-        editGoal(goalId, description, newCompleted)
+        editGoal(goalId, descriptionInput, newCompleted)
     }
 
     const handleEdit = () => {
@@ -50,7 +48,7 @@ const GoalCard = React.memo(({ goalId, showDelete, editGoal, deleteGoal }: GoalC
 
     const handleSave = () => {
         setEdit(false)
-        editGoal(goalId, description, completed)
+        editGoal(goalId, descriptionInput, completed)
     }
 
     const handleDelete = () => {
@@ -63,7 +61,7 @@ const GoalCard = React.memo(({ goalId, showDelete, editGoal, deleteGoal }: GoalC
             description: description,
             hours: hours
         })
-        setCommits(commits => [...commits, res.data])
+        setCommits(commits => [res.data, ...commits])
     }, [goalId])
 
     const editCommit = useCallback(async (commitId: string, description: string, hours: number) => {
@@ -100,7 +98,7 @@ const GoalCard = React.memo(({ goalId, showDelete, editGoal, deleteGoal }: GoalC
                                     </button>
                                     {edit ?
                                         <>
-                                            <input type="text" value={description} onChange={e => setDescription(e.target.value)} />
+                                            <input type="text" value={descriptionInput} onChange={e => setDescriptionInput(e.target.value)} />
                                             <button onClick={handleSave}>Save</button>
                                         </> :
                                         <>

@@ -26,10 +26,12 @@ const filterGoals = (goals: GoalQueryResult[], spec: GoalListSpec) => {
 }
 
 const GoalListPanel = ({ spec }: GoalListPanelProps) => {
-
-    
-    const [goals, setGoals] = useState<GoalQueryResult[]>([])
     const [edit, setEdit] = useState<boolean>(false)
+    const [goals, setGoals] = useState<GoalQueryResult[]>([])
+
+    const isGroup = !(spec instanceof GoalFilter)
+    const filteredGoals = useMemo(() => filterGoals(goals, spec), [goals, spec])
+
 
     useEffect(() => {
         const load = async () => {
@@ -44,16 +46,24 @@ const GoalListPanel = ({ spec }: GoalListPanelProps) => {
     }
 
     const createGoal = useCallback(async (description: string) => {
-        const res = await axios.post(`/goals/createGoal`, {
-            description: description
-        })
+        const res = isGroup ? (
+            await axios.post(`/goals/createGoalInGroup`, {
+                description: description,
+                groupId: spec.id
+            })
+        ) : (
+            await axios.post(`/goals/createGoal`, {
+                description: description
+            })
+        )
         const newGoal: GoalQueryResult = {
             id: res.data.id,
+            description: res.data.description,
             completed: res.data.completed,
             groups: res.data.groups
         }
         setGoals(goals => [...goals, newGoal])
-    }, [])
+    }, [isGroup])
 
     const editGoal = useCallback(async (goalId: string, description: string, completed: boolean) => {
         console.log(completed)
@@ -64,6 +74,7 @@ const GoalListPanel = ({ spec }: GoalListPanelProps) => {
         })
         const updatedGoal: GoalQueryResult = {
             id: res.data.id,
+            description: res.data.description,
             completed: res.data.completed,
             groups: res.data.groups
         }
@@ -78,7 +89,6 @@ const GoalListPanel = ({ spec }: GoalListPanelProps) => {
         setGoals(goals => goals.filter(item => item.id !== res.data.id))
     }, [])
 
-    const filteredGoals = useMemo(() => filterGoals(goals, spec), [goals, spec])
     return (
         <>
             <div className="flex">

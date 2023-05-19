@@ -17,7 +17,7 @@ const GoalList = ({ goals, edit, editGoal, deleteGoal }: GoalListProps) => {
     return (
         <>
             {goals.map((goal) =>
-                <GoalCard key={goal.id} goalId={goal.id} showDelete={edit} editGoal={editGoal} deleteGoal={deleteGoal} />
+                <GoalCard key={goal.id} goalId={goal.id} description={goal.description} completed={goal.completed} showDelete={edit} editGoal={editGoal} deleteGoal={deleteGoal} />
             )}
         </>
     )
