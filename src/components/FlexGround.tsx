@@ -26,13 +26,22 @@ const FlexGround = () => {
                 wow
             </div> */}
         <div>
-          <div className="ml-40 mt-10 bg-gray-200">
+          <div className="ml-40 mt-10 bg-gray-400">
             <div className="bg-gray-300">header</div>
-            {items.map((item) => (
-              <div className="my-3 ml-10 mr-10 bg-gray-100">
-                <span>{item}</span>
-              </div>
-            ))}
+            <div className="mx-10 bg-gray-200">
+              {items.map((item) => (
+                <div className="my-3 flex justify-between bg-gray-100">
+                  <div className="flex flex-grow bg-blue-100">
+                    <span>{item}</span>
+                    <span>{item}</span>
+                  </div>
+                  <div className="flex flex-grow flex-row-reverse bg-red-100">
+                    <div>...</div>
+                    <div>...</div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

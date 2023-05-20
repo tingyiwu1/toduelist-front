@@ -6,6 +6,7 @@ import {
   PencilSquareIcon,
   TrashIcon,
   FolderMinusIcon,
+  CheckIcon,
 } from "@heroicons/react/24/solid";
 import { CheckCircleIcon as OutlineCheckCircleIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
@@ -116,12 +117,12 @@ const GoalCard = React.memo(
 
     return (
       <>
-        <div className="">
+        <div className="my-3 p-3 bg-orange-200">
           <Disclosure>
             {({ open }) => (
               <>
-                <div>
-                  <div className="flex">
+                <div className=" bg-red-300">
+                  <div className="flex h-10 justify-between bg-green-200">
                     <button onClick={handleComplete}>
                       {completed ? (
                         <SolidCheckCircleIcon className="h-5 w-5" />
@@ -132,40 +133,48 @@ const GoalCard = React.memo(
                     {edit ? (
                       <>
                         <input
+                          className="flex-grow bg-gray-100"
                           type="text"
                           value={descriptionInput}
                           onChange={(e) => setDescriptionInput(e.target.value)}
                         />
-                        <button onClick={handleSave}>Save</button>
+                        <button onClick={handleSave}>
+                          <CheckIcon className="h-5 w-5" />
+                        </button>
                       </>
                     ) : (
                       <>
-                        <Disclosure.Button as="div">
+                        <Disclosure.Button
+                          as="div"
+                          className="flex flex-grow items-center bg-blue-300 hover:cursor-pointer"
+                        >
                           {description}
                         </Disclosure.Button>
-                        {editButtonState === "edit" ? (
-                          <PencilSquareIcon
-                            className="h-5 w-5 hover:cursor-pointer"
-                            onClick={handleEdit}
-                          />
-                        ) : editButtonState === "delete" ? (
-                          <TrashIcon
-                            className="h-5 w-5 hover:cursor-pointer"
-                            onClick={handleDelete}
-                          />
-                        ) : (
-                          // editButtonState === 'remove'
-                          <FolderMinusIcon
-                            className="h-5 w-5 hover:cursor-pointer"
-                            onClick={handleRemove}
-                          />
-                        )}
+                        <div className="flex items-center">
+                          {editButtonState === "edit" ? (
+                            <PencilSquareIcon
+                              className="h-5 w-5 hover:cursor-pointer"
+                              onClick={handleEdit}
+                            />
+                          ) : editButtonState === "delete" ? (
+                            <TrashIcon
+                              className="h-5 w-5 hover:cursor-pointer"
+                              onClick={handleDelete}
+                            />
+                          ) : (
+                            // editButtonState === 'remove'
+                            <FolderMinusIcon
+                              className="h-5 w-5 hover:cursor-pointer"
+                              onClick={handleRemove}
+                            />
+                          )}
+                        </div>
                       </>
                     )}
                   </div>
                   {open && <CreateCommitForm createCommit={createCommit} />}
                 </div>
-                <Disclosure.Panel>
+                <Disclosure.Panel className="ml-5">
                   {commits.map((commit) => (
                     <CommitItem
                       key={commit.id}

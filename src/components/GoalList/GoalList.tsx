@@ -26,7 +26,7 @@ const GoalList = ({
   removeGoal,
 }: GoalListProps) => {
   return (
-    <>
+    <div className="mx-40 bg-gray-200">
       {goals.map((goal) => (
         <GoalCard
           key={goal.id}
@@ -39,7 +39,7 @@ const GoalList = ({
           removeGoal={removeGoal}
         />
       ))}
-    </>
+    </div>
   );
 };
 

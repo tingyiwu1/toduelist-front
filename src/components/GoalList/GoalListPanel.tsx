@@ -15,6 +15,7 @@ import GoalList from "./GoalList";
 import InviteDialog from "./InviteDialog";
 import CreateGoalForm from "./CreateGoalForm";
 import AddGoalToGroupForm from "./AddGoalToGroupForm";
+import GoalListPanelHeader from "./GoalListPanelHeader";
 
 interface GoalListPanelProps {
   spec: GoalListSpec;
@@ -65,18 +66,6 @@ const GoalListPanel = ({ spec, leaveGroup }: GoalListPanelProps) => {
   useEffect(() => {
     if (!isGroup) setShowAddForm(false);
   }, [isGroup]);
-
-  const handleEdit = () => {
-    if (editButtonState === "edit") {
-      if (isGroup) {
-        setEditButtonState("remove");
-      } else {
-        setEditButtonState("delete");
-      }
-    } else {
-      setEditButtonState("edit");
-    }
-  };
 
   const createGoal = useCallback(
     async (description: string) => {
@@ -176,49 +165,13 @@ const GoalListPanel = ({ spec, leaveGroup }: GoalListPanelProps) => {
           joinCode={spec.joinCode}
         />
       )}
-      <div className="flex">
-        <div>
-          <span>{spec.name}</span>
-          {isGroup && (
-            <Menu as="div" className="relative inline-block text-left">
-              <Menu.Button>
-                <UsersIcon className="h-5 w-5" />
-              </Menu.Button>
-              <Menu.Items className="absolute">
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`${
-                        active ? "bg-blue-500" : "bg-gray-100"
-                      } block w-full px-4 py-2 text-left text-sm text-gray-700`}
-                      onClick={() => setInviteDialogOpen(true)}
-                    >
-                      <span className="flex items-center">Invite</span>
-                    </button>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`${
-                        active ? "bg-blue-500" : "bg-gray-100"
-                      } block w-full px-4 py-2 text-left text-sm text-gray-700`}
-                      onClick={() => leaveGroup(spec.id)}
-                    >
-                      <span className="flex items-center">Leave</span>
-                    </button>
-                  )}
-                </Menu.Item>
-              </Menu.Items>
-            </Menu>
-          )}
-        </div>
-        <div>
-          <button onClick={handleEdit}>
-            {editButtonState === "edit" ? "Edit" : "Done"}
-          </button>
-        </div>
-      </div>
+      <GoalListPanelHeader
+        editButtonState={editButtonState}
+        setInviteDialogOpen={setInviteDialogOpen}
+        setEditButtonState={setEditButtonState}
+        spec={spec}
+        leaveGroup={leaveGroup}
+      />
       <GoalList
         goals={goalsInList}
         edit={editButtonState}
