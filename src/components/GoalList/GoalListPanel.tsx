@@ -1,169 +1,260 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
-import { Switch } from '@headlessui/react'
-import axios from 'axios'
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { Switch, Menu, Dialog } from "@headlessui/react";
+import { UsersIcon } from "@heroicons/react/24/solid";
+import axios from "axios";
 
-import { GoalQueryResult, Goal, GoalListSpec, GoalFilter, Group } from '../util/interfaces'
+import {
+  GoalQueryResult,
+  Goal,
+  GoalListSpec,
+  GoalFilter,
+  Group,
+} from "../util/interfaces";
 
-import GoalList from './GoalList'
-import CreateGoalForm from './CreateGoalForm'
-import AddGoalToGroupForm from './AddGoalToGroupForm'
+import GoalList from "./GoalList";
+import InviteDialog from "./InviteDialog";
+import CreateGoalForm from "./CreateGoalForm";
+import AddGoalToGroupForm from "./AddGoalToGroupForm";
 
 interface GoalListPanelProps {
-    spec: GoalListSpec
+  spec: GoalListSpec;
+  leaveGroup: (groupId: string) => Promise<void>;
 }
 
-export type EditButtonState = 'edit' | 'delete' | 'remove'
+export type EditButtonState = "edit" | "delete" | "remove";
 
 const getFilter = (spec: GoalListSpec) => {
-    let filter: (goal: GoalQueryResult) => boolean
-    if (spec === GoalFilter.ALL)
-        filter = (_: GoalQueryResult) => true
-    else if (spec === GoalFilter.ACTIVE)
-        filter = (goal: GoalQueryResult) => goal.completed === false
-    else if (spec === GoalFilter.COMPLETED)
-        filter = (goal: GoalQueryResult) => goal.completed === true
-    else { // spec is a group
-        const group = spec as Group
-        filter = (goal: GoalQueryResult) => goal.groups.find((groupId: string) => groupId === group.id) !== undefined
+  let filter: (goal: GoalQueryResult) => boolean;
+  if (spec === GoalFilter.ALL) filter = (_: GoalQueryResult) => true;
+  else if (spec === GoalFilter.ACTIVE)
+    filter = (goal: GoalQueryResult) => goal.completed === false;
+  else if (spec === GoalFilter.COMPLETED)
+    filter = (goal: GoalQueryResult) => goal.completed === true;
+  else {
+    // spec is a group
+    const group = spec as Group;
+    filter = (goal: GoalQueryResult) =>
+      goal.groups.find((groupId: string) => groupId === group.id) !== undefined;
+  }
+  return filter;
+};
+
+const GoalListPanel = ({ spec, leaveGroup }: GoalListPanelProps) => {
+  const [editButtonState, setEditButtonState] =
+    useState<EditButtonState>("edit");
+  const [goals, setGoals] = useState<GoalQueryResult[]>([]);
+  const [showAddForm, setShowAddForm] = useState<boolean>(false);
+  const [inviteDialogOpen, setInviteDialogOpen] = useState<boolean>(false);
+
+  const isGroup = !(spec instanceof GoalFilter);
+  const filter = useMemo(() => getFilter(spec), [spec]);
+  const goalsInList = useMemo(() => goals.filter(filter), [goals, filter]);
+  const goalsNotInList = useMemo(
+    () => goals.filter((goal) => !filter(goal)),
+    [goals, filter]
+  );
+
+  useEffect(() => {
+    const load = async () => {
+      const res = await axios.get(`/goals/goalQuery`);
+      setGoals(res.data);
+    };
+    load();
+  }, []);
+
+  useEffect(() => {
+    if (!isGroup) setShowAddForm(false);
+  }, [isGroup]);
+
+  const handleEdit = () => {
+    if (editButtonState === "edit") {
+      if (isGroup) {
+        setEditButtonState("remove");
+      } else {
+        setEditButtonState("delete");
+      }
+    } else {
+      setEditButtonState("edit");
     }
-    return filter
-}
+  };
 
-const GoalListPanel = ({ spec }: GoalListPanelProps) => {
-    const [editButtonState, setEditButtonState] = useState<EditButtonState>('edit')
-    const [goals, setGoals] = useState<GoalQueryResult[]>([])
-    const [showAddForm, setShowAddForm] = useState<boolean>(false)
-
-    const isGroup = !(spec instanceof GoalFilter)
-    const filter = useMemo(() => getFilter(spec), [spec])
-    const goalsInList = useMemo(() => goals.filter(filter), [goals, filter])
-    const goalsNotInList = useMemo(() => goals.filter(goal => !filter(goal)), [goals, filter])
-
-    useEffect(() => {
-        const load = async () => {
-            const res = await axios.get(`/goals/goalQuery`)
-            setGoals(res.data)
-        }
-        load()
-    }, [])
-
-    useEffect(() => {
-        if (!isGroup)
-            setShowAddForm(false)
-    }, [isGroup])
-
-    const handleEdit = () => {
-        if (editButtonState === 'edit') {
-            if (isGroup) {
-                setEditButtonState('remove')
-            } else {
-                setEditButtonState('delete')
-            }
-        } else {
-            setEditButtonState('edit')
-        }
-    }
-
-    const createGoal = useCallback(async (description: string) => {
-        const res = isGroup ? (
-            await axios.post(`/goals/createGoalInGroup`, {
-                description: description,
-                groupId: spec.id
-            })
-        ) : (
-            await axios.post(`/goals/createGoal`, {
-                description: description
-            })
-        )
-        const newGoal: GoalQueryResult = {
-            id: res.data.id,
-            description: res.data.description,
-            completed: res.data.completed,
-            groups: res.data.groups
-        }
-        setGoals(goals => [...goals, newGoal])
-    }, [isGroup])
-
-    const editGoal = useCallback(async (goalId: string, description: string, completed: boolean) => {
-        console.log(completed)
-        const res = await axios.post(`/goals/editGoal`, {
-            id: goalId,
+  const createGoal = useCallback(
+    async (description: string) => {
+      const res = isGroup
+        ? await axios.post(`/goals/createGoalInGroup`, {
             description: description,
-            completed: completed
-        })
-        const updatedGoal: GoalQueryResult = {
-            id: res.data.id,
-            description: res.data.description,
-            completed: res.data.completed,
-            groups: res.data.groups
-        }
-        console.log(updatedGoal)
-        setGoals(goals => goals.map(item => item.id === updatedGoal.id ? updatedGoal : item))
-    }, [])
+            groupId: spec.id,
+          })
+        : await axios.post(`/goals/createGoal`, {
+            description: description,
+          });
+      const newGoal: GoalQueryResult = {
+        id: res.data.id,
+        description: res.data.description,
+        completed: res.data.completed,
+        groups: res.data.groups,
+      };
+      setGoals((goals) => [...goals, newGoal]);
+    },
+    [isGroup]
+  );
 
-    const deleteGoal = useCallback(async (goalId: string) => {
-        const res = await axios.post(`/goals/deleteGoal`, {
-            id: goalId
-        })
-        setGoals(goals => goals.filter(item => item.id !== res.data.id))
-    }, [])
+  const editGoal = useCallback(
+    async (goalId: string, description: string, completed: boolean) => {
+      console.log(completed);
+      const res = await axios.post(`/goals/editGoal`, {
+        id: goalId,
+        description: description,
+        completed: completed,
+      });
+      const updatedGoal: GoalQueryResult = {
+        id: res.data.id,
+        description: res.data.description,
+        completed: res.data.completed,
+        groups: res.data.groups,
+      };
+      console.log(updatedGoal);
+      setGoals((goals) =>
+        goals.map((item) => (item.id === updatedGoal.id ? updatedGoal : item))
+      );
+    },
+    []
+  );
 
-    const addGoalToGroup = useCallback(async (goalId: string, groupId: string) => {
-        const res = await axios.post(`/goals/addGoalToGroup`, {
-            goalId: goalId,
-            groupId: groupId
-        })
-        const updatedGoal: GoalQueryResult = {
-            id: res.data.id,
-            description: res.data.description,
-            completed: res.data.completed,
-            groups: res.data.groups
-        }
-        setGoals(goals => goals.map(item => item.id === updatedGoal.id ? updatedGoal : item))
-    }, [])
+  const deleteGoal = useCallback(async (goalId: string) => {
+    const res = await axios.post(`/goals/deleteGoal`, {
+      id: goalId,
+    });
+    setGoals((goals) => goals.filter((item) => item.id !== res.data.id));
+  }, []);
 
-    const removeGoalFromGroup = useCallback(async (goalId: string) => {
-        if (!isGroup) return
-        const res = await axios.post(`/goals/removeGoalFromGroup`, {
-            goalId: goalId,
-            groupId: spec.id
-        })
-        const updatedGoal: GoalQueryResult = {
-            id: res.data.id,
-            description: res.data.description,
-            completed: res.data.completed,
-            groups: res.data.groups
-        }
-        setGoals(goals => goals.map(item => item.id === updatedGoal.id ? updatedGoal : item))
-    }, [isGroup])
+  const addGoalToGroup = useCallback(
+    async (goalId: string, groupId: string) => {
+      const res = await axios.post(`/goals/addGoalToGroup`, {
+        goalId: goalId,
+        groupId: groupId,
+      });
+      const updatedGoal: GoalQueryResult = {
+        id: res.data.id,
+        description: res.data.description,
+        completed: res.data.completed,
+        groups: res.data.groups,
+      };
+      setGoals((goals) =>
+        goals.map((item) => (item.id === updatedGoal.id ? updatedGoal : item))
+      );
+    },
+    []
+  );
 
-    return (
-        <>
-            <div className="flex">
-                <div>
-                    <span>{spec.name}</span>
-                </div>
-                <div>
-                    <button onClick={handleEdit}>{editButtonState === 'edit' ? "Edit" : "Done"}</button>
-                </div>
-            </div>
-            <GoalList goals={goalsInList} edit={editButtonState} editGoal={editGoal} deleteGoal={deleteGoal} removeGoal={removeGoalFromGroup}/>
-            <div className="fixed bottom-10 ml-5 mr-5">
-                {isGroup && showAddForm ?
-                    <AddGoalToGroupForm groupId={spec.id} goals={goalsNotInList} addGoalToGroup={addGoalToGroup} />
-                    :
-                    <CreateGoalForm createGoal={createGoal} />
-                }
-                {isGroup &&
-                    <Switch checked={showAddForm} onChange={setShowAddForm} className={`${showAddForm ? 'bg-blue-600' : 'bg-gray-200'} relative inline-flex items-center h-6 rounded-full w-11`}>
-                        <span className="sr-only">Add existing goal</span>
-                        <span className={`${showAddForm ? 'translate-x-6' : 'translate-x-1'} inline-block w-4 h-4 transform bg-white rounded-full`} />
-                    </Switch>
-                }
+  const removeGoalFromGroup = useCallback(
+    async (goalId: string) => {
+      if (!isGroup) return;
+      const res = await axios.post(`/goals/removeGoalFromGroup`, {
+        goalId: goalId,
+        groupId: spec.id,
+      });
+      const updatedGoal: GoalQueryResult = {
+        id: res.data.id,
+        description: res.data.description,
+        completed: res.data.completed,
+        groups: res.data.groups,
+      };
+      setGoals((goals) =>
+        goals.map((item) => (item.id === updatedGoal.id ? updatedGoal : item))
+      );
+    },
+    [isGroup]
+  );
 
-            </div>
-        </>
-    )
-}
+  return (
+    <>
+      {isGroup && (
+        <InviteDialog
+          open={inviteDialogOpen}
+          setOpen={setInviteDialogOpen}
+          joinCode={spec.joinCode}
+        />
+      )}
+      <div className="flex">
+        <div>
+          <span>{spec.name}</span>
+          {isGroup && (
+            <Menu as="div" className="relative inline-block text-left">
+              <Menu.Button>
+                <UsersIcon className="h-5 w-5" />
+              </Menu.Button>
+              <Menu.Items className="absolute">
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      className={`${
+                        active ? "bg-blue-500" : "bg-gray-100"
+                      } block w-full px-4 py-2 text-left text-sm text-gray-700`}
+                      onClick={() => setInviteDialogOpen(true)}
+                    >
+                      <span className="flex items-center">Invite</span>
+                    </button>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      className={`${
+                        active ? "bg-blue-500" : "bg-gray-100"
+                      } block w-full px-4 py-2 text-left text-sm text-gray-700`}
+                      onClick={() => leaveGroup(spec.id)}
+                    >
+                      <span className="flex items-center">Leave</span>
+                    </button>
+                  )}
+                </Menu.Item>
+              </Menu.Items>
+            </Menu>
+          )}
+        </div>
+        <div>
+          <button onClick={handleEdit}>
+            {editButtonState === "edit" ? "Edit" : "Done"}
+          </button>
+        </div>
+      </div>
+      <GoalList
+        goals={goalsInList}
+        edit={editButtonState}
+        editGoal={editGoal}
+        deleteGoal={deleteGoal}
+        removeGoal={removeGoalFromGroup}
+      />
+      <div className="fixed bottom-10 ml-5 mr-5">
+        {isGroup && showAddForm ? (
+          <AddGoalToGroupForm
+            groupId={spec.id}
+            goals={goalsNotInList}
+            addGoalToGroup={addGoalToGroup}
+          />
+        ) : (
+          <CreateGoalForm createGoal={createGoal} />
+        )}
+        {isGroup && (
+          <Switch
+            checked={showAddForm}
+            onChange={setShowAddForm}
+            className={`${
+              showAddForm ? "bg-blue-600" : "bg-gray-200"
+            } relative inline-flex h-6 w-11 items-center rounded-full`}
+          >
+            <span className="sr-only">Add existing goal</span>
+            <span
+              className={`${
+                showAddForm ? "translate-x-6" : "translate-x-1"
+              } inline-block h-4 w-4 transform rounded-full bg-white`}
+            />
+          </Switch>
+        )}
+      </div>
+    </>
+  );
+};
 
-export default GoalListPanel
+export default GoalListPanel;
