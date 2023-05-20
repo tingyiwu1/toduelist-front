@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Disclosure, Menu } from '@headlessui/react'
-import { EllipsisHorizontalIcon, CheckCircleIcon as SolidCheckCircleIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid'
+import { EllipsisHorizontalIcon, CheckCircleIcon as SolidCheckCircleIcon, PencilSquareIcon, TrashIcon, FolderMinusIcon } from '@heroicons/react/24/solid'
 import { CheckCircleIcon as OutlineCheckCircleIcon } from '@heroicons/react/24/outline'
 import axios from 'axios'
 
 import { Goal, Commit } from '../util/interfaces'
+import { EditButtonState } from './GoalListPanel'
 
 import CommitItem from './CommitItem'
 import CreateCommitForm from './CreateCommitForm'
@@ -13,17 +14,17 @@ interface GoalCardProps {
     goalId: string
     description: string
     completed: boolean
-    showDelete: boolean
+    editButtonState: EditButtonState
     editGoal: (goalId: string, description: string, completed: boolean) => Promise<void>
     deleteGoal: (goalId: string) => Promise<void>
+    removeGoal: (goalId: string) => Promise<void>
 }
 
-const GoalCard = React.memo(({ goalId, showDelete, description, completed, editGoal, deleteGoal }: GoalCardProps) => {
+const GoalCard = React.memo(({ goalId, editButtonState, description, completed, editGoal, deleteGoal, removeGoal }: GoalCardProps) => {
 
     const [edit, setEdit] = useState<boolean>(false)
     const [descriptionInput, setDescriptionInput] = useState<string>(description)
     const [commits, setCommits] = useState<Commit[]>([])
-    const [groups, setGroups] = useState<{ id: string, name: string }[]>([])
 
     useEffect(() => {
         const load = async () => {
@@ -32,7 +33,6 @@ const GoalCard = React.memo(({ goalId, showDelete, description, completed, editG
                 id: goalId
             })
             setCommits(res.data.commits)
-            setGroups(res.data.groups)
         }
         load()
     }, [goalId])
@@ -53,6 +53,10 @@ const GoalCard = React.memo(({ goalId, showDelete, description, completed, editG
 
     const handleDelete = () => {
         deleteGoal(goalId)
+    }
+
+    const handleRemove = () => {
+        removeGoal(goalId)
     }
 
     const createCommit = useCallback(async (description: string, hours: number) => {
@@ -105,11 +109,12 @@ const GoalCard = React.memo(({ goalId, showDelete, description, completed, editG
                                             <Disclosure.Button as="div">
                                                 {description}
                                             </Disclosure.Button>
-                                            {showDelete ?
-                                                <TrashIcon className="h-5 w-5" onClick={handleDelete} />
-                                                :
-
+                                            {editButtonState === 'edit' ?
                                                 <PencilSquareIcon className="h-5 w-5" onClick={handleEdit} />
+                                                : editButtonState === 'delete' ?
+                                                    <TrashIcon className="h-5 w-5" onClick={handleDelete} />
+                                                    :
+                                                    <FolderMinusIcon className="h-5 w-5" onClick={handleRemove}/>
                                             }
                                         </>
                                     }

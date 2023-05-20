@@ -18,7 +18,7 @@ const CreateGoalForm = ({ createGoal }: CreateGoalFormProps) => {
 
     return (
         <>
-            <input type="text" value={description} placeholder="New Goal" onChange={e => setDescription(e.target.value)} />
+            <input type="text" value={description} placeholder="New goal" onChange={e => setDescription(e.target.value)} />
             <button onClick={handleSubmit}><PlusCircleIcon className="h-5 w-5"/></button>
         </>
     )

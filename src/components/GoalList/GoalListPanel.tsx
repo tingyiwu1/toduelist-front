@@ -1,16 +1,20 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
+import { Switch } from '@headlessui/react'
 import axios from 'axios'
 
 import { GoalQueryResult, Goal, GoalListSpec, GoalFilter, Group } from '../util/interfaces'
 
 import GoalList from './GoalList'
 import CreateGoalForm from './CreateGoalForm'
+import AddGoalToGroupForm from './AddGoalToGroupForm'
 
 interface GoalListPanelProps {
     spec: GoalListSpec
 }
 
-const filterGoals = (goals: GoalQueryResult[], spec: GoalListSpec) => {
+export type EditButtonState = 'edit' | 'delete' | 'remove'
+
+const getFilter = (spec: GoalListSpec) => {
     let filter: (goal: GoalQueryResult) => boolean
     if (spec === GoalFilter.ALL)
         filter = (_: GoalQueryResult) => true
@@ -22,16 +26,18 @@ const filterGoals = (goals: GoalQueryResult[], spec: GoalListSpec) => {
         const group = spec as Group
         filter = (goal: GoalQueryResult) => goal.groups.find((groupId: string) => groupId === group.id) !== undefined
     }
-    return goals.filter(filter)
+    return filter
 }
 
 const GoalListPanel = ({ spec }: GoalListPanelProps) => {
-    const [edit, setEdit] = useState<boolean>(false)
+    const [editButtonState, setEditButtonState] = useState<EditButtonState>('edit')
     const [goals, setGoals] = useState<GoalQueryResult[]>([])
+    const [showAddForm, setShowAddForm] = useState<boolean>(false)
 
     const isGroup = !(spec instanceof GoalFilter)
-    const filteredGoals = useMemo(() => filterGoals(goals, spec), [goals, spec])
-
+    const filter = useMemo(() => getFilter(spec), [spec])
+    const goalsInList = useMemo(() => goals.filter(filter), [goals, filter])
+    const goalsNotInList = useMemo(() => goals.filter(goal => !filter(goal)), [goals, filter])
 
     useEffect(() => {
         const load = async () => {
@@ -41,8 +47,21 @@ const GoalListPanel = ({ spec }: GoalListPanelProps) => {
         load()
     }, [])
 
+    useEffect(() => {
+        if (!isGroup)
+            setShowAddForm(false)
+    }, [isGroup])
+
     const handleEdit = () => {
-        setEdit(edit => !edit)
+        if (editButtonState === 'edit') {
+            if (isGroup) {
+                setEditButtonState('remove')
+            } else {
+                setEditButtonState('delete')
+            }
+        } else {
+            setEditButtonState('edit')
+        }
     }
 
     const createGoal = useCallback(async (description: string) => {
@@ -89,6 +108,35 @@ const GoalListPanel = ({ spec }: GoalListPanelProps) => {
         setGoals(goals => goals.filter(item => item.id !== res.data.id))
     }, [])
 
+    const addGoalToGroup = useCallback(async (goalId: string, groupId: string) => {
+        const res = await axios.post(`/goals/addGoalToGroup`, {
+            goalId: goalId,
+            groupId: groupId
+        })
+        const updatedGoal: GoalQueryResult = {
+            id: res.data.id,
+            description: res.data.description,
+            completed: res.data.completed,
+            groups: res.data.groups
+        }
+        setGoals(goals => goals.map(item => item.id === updatedGoal.id ? updatedGoal : item))
+    }, [])
+
+    const removeGoalFromGroup = useCallback(async (goalId: string) => {
+        if (!isGroup) return
+        const res = await axios.post(`/goals/removeGoalFromGroup`, {
+            goalId: goalId,
+            groupId: spec.id
+        })
+        const updatedGoal: GoalQueryResult = {
+            id: res.data.id,
+            description: res.data.description,
+            completed: res.data.completed,
+            groups: res.data.groups
+        }
+        setGoals(goals => goals.map(item => item.id === updatedGoal.id ? updatedGoal : item))
+    }, [isGroup])
+
     return (
         <>
             <div className="flex">
@@ -96,12 +144,23 @@ const GoalListPanel = ({ spec }: GoalListPanelProps) => {
                     <span>{spec.name}</span>
                 </div>
                 <div>
-                    <button onClick={handleEdit}>{edit ? "Done" : "Edit"}</button>
+                    <button onClick={handleEdit}>{editButtonState === 'edit' ? "Edit" : "Done"}</button>
                 </div>
             </div>
-            <GoalList goals={filteredGoals} edit={edit} editGoal={editGoal} deleteGoal={deleteGoal} />
+            <GoalList goals={goalsInList} edit={editButtonState} editGoal={editGoal} deleteGoal={deleteGoal} removeGoal={removeGoalFromGroup}/>
             <div className="fixed bottom-10 ml-5 mr-5">
-                <CreateGoalForm createGoal={createGoal} />
+                {isGroup && showAddForm ?
+                    <AddGoalToGroupForm groupId={spec.id} goals={goalsNotInList} addGoalToGroup={addGoalToGroup} />
+                    :
+                    <CreateGoalForm createGoal={createGoal} />
+                }
+                {isGroup &&
+                    <Switch checked={showAddForm} onChange={setShowAddForm} className={`${showAddForm ? 'bg-blue-600' : 'bg-gray-200'} relative inline-flex items-center h-6 rounded-full w-11`}>
+                        <span className="sr-only">Add existing goal</span>
+                        <span className={`${showAddForm ? 'translate-x-6' : 'translate-x-1'} inline-block w-4 h-4 transform bg-white rounded-full`} />
+                    </Switch>
+                }
+
             </div>
         </>
     )

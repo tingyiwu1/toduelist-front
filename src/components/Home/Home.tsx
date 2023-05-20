@@ -6,6 +6,7 @@ import { Group, GoalListSpec, GoalFilter } from '../util/interfaces'
 
 import GoalList from '../GoalList/GoalList'
 import GoalListPanel from '../GoalList/GoalListPanel'
+import Leaderboard from './Leaderboard'
 
 const Home = () => {
     const [selectedSpec, setSelectedSpec] = useState<GoalListSpec>(GoalFilter.ALL)
@@ -28,7 +29,7 @@ const Home = () => {
             <div className="fixed top-10 left-0 h-screen w-40 m-0 flex flex-col bg-gray-50 shadow">
                 <RadioGroup value={selectedSpec} onChange={setSelectedSpec}>
                     {/* <RadioGroup.Label>Lists</RadioGroup.Label> */}
-                    {GoalFilter.values.map(goalFilter => 
+                    {GoalFilter.values.map(goalFilter =>
                         <RadioGroup.Option value={goalFilter} key={goalFilter.name}>
                             {({ checked }) => (
                                 <span className={checked ? 'bg-blue-600' : 'bg-gray-200'}>{goalFilter.name}</span>
@@ -43,6 +44,9 @@ const Home = () => {
                         </RadioGroup.Option>
                     )}
                 </RadioGroup>
+                {!(selectedSpec instanceof GoalFilter) &&
+                    <Leaderboard groupId={selectedSpec.id} />
+                }
             </div>
             <div className="ml-40 mt-10">
                 <GoalListPanel spec={selectedSpec} />
