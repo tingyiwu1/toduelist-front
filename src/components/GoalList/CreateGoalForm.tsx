@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 
-import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
 interface CreateGoalFormProps {
   createGoal: (description: string) => Promise<void>;
@@ -16,16 +16,19 @@ const CreateGoalForm = ({ createGoal }: CreateGoalFormProps) => {
   }, [description]);
 
   return (
-    <div className="flex flex-grow items-center bg-purple-300">
+    <div className="flex flex-grow items-center">
       <input
-        className="flex-grow"
+        className="flex-grow bg-gray-50 px-2 py-1 focus:outline-none"
         type="text"
         value={description}
         placeholder="New goal"
         onChange={(e) => setDescription(e.target.value)}
       />
-      <button onClick={handleSubmit}>
-        <PlusCircleIcon className="h-5 w-5" />
+      <button
+        className="rounded-lg p-0.5 hover:bg-gray-400"
+        onClick={handleSubmit}
+      >
+        <PlusCircleIcon className="h-7 w-7" />
       </button>
     </div>
   );

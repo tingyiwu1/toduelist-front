@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Combobox } from "@headlessui/react";
-import { PlusCircleIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 
 import { GoalQueryResult } from "../util/interfaces";
 
@@ -32,23 +32,37 @@ const AddGoalToGroupForm = ({
           goal.description.toLowerCase().includes(query.toLowerCase())
         );
   return (
-    <div className="flex flex-grow bg-gray-300">
+    <div className="flex flex-grow">
       <Combobox
         as="div"
-        className="relative flex-grow bg-blue-300"
+        className="relative flex-grow"
         value={selected}
         onChange={setSelected}
         nullable
       >
-        <Combobox.Options className="absolute bottom-full w-full">
+        <Combobox.Options className="absolute bottom-full mb-1 max-h-80 w-full overflow-auto rounded-md bg-gray-50 py-1 shadow-lg sm:text-sm">
           {filteredGoals.map((goal) => (
-            <Combobox.Option key={goal.id} value={goal}>
+            <Combobox.Option
+              className={({ selected, active }) =>
+                `relative cursor-default select-none py-2 pl-4 pr-4 ${
+                  selected && active
+                    ? "bg-red-400"
+                    : selected
+                    ? "bg-red-300"
+                    : active
+                    ? "bg-gray-300"
+                    : ""
+                }`
+              }
+              key={goal.id}
+              value={goal}
+            >
               {goal.description}
             </Combobox.Option>
           ))}
         </Combobox.Options>
         <Combobox.Input
-          className="w-full"
+          className="w-full bg-gray-50 px-2 py-1 focus:outline-none"
           onChange={(e) => setQuery(e.target.value)}
           displayValue={(g: GoalQueryResult | null) =>
             g === null ? "" : g.description
@@ -56,12 +70,15 @@ const AddGoalToGroupForm = ({
           placeholder="Add existing goal"
         />
 
-        <Combobox.Button className="absolute inset-y-0 right-0 pr-2">
-          <ChevronUpIcon className="h-5 w-5" />
+        <Combobox.Button className="absolute inset-y-0 right-0 mr-1 rounded-md p-0.5 hover:bg-gray-400">
+          <ChevronUpIcon className="h-7 w-7" />
         </Combobox.Button>
       </Combobox>
-      <button onClick={handleAdd}>
-        <PlusCircleIcon className="h-5 w-5" />
+      <button
+        className="rounded-md p-0.5 hover:bg-gray-400"
+        onClick={handleAdd}
+      >
+        <PlusCircleIcon className="h-7 w-7" />
       </button>
     </div>
   );

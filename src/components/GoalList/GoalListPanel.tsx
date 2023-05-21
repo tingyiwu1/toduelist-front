@@ -153,6 +153,7 @@ const GoalListPanel = ({ spec, leaveGroup }: GoalListPanelProps) => {
       {isGroup && (
         <InviteDialog
           open={inviteDialogOpen}
+          group={spec.name}
           setOpen={setInviteDialogOpen}
           joinCode={spec.joinCode}
         />
@@ -179,7 +180,7 @@ const GoalListPanel = ({ spec, leaveGroup }: GoalListPanelProps) => {
         createGoal={createGoal}
         addGoalToGroup={addGoalToGroup}
       />
-      <div className="h-20"></div>
+      <div className="h-[6rem]"></div>
     </>
   );
 };

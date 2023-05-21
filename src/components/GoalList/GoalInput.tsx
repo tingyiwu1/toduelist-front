@@ -25,7 +25,11 @@ const GoalInput = ({
   const isGroup = !(spec instanceof GoalFilter);
   return (
     <div className="fixed bottom-10 flex w-full justify-center">
-      <div className="relative right-20 flex w-80 items-center justify-center shadow md:w-[32rem] xl:w-[64rem]">
+      <div
+        className={`${
+          isGroup && showAddForm ? "bg-red-300" : "bg-blue-300"
+        } relative right-20 flex w-96 items-center justify-center rounded-md p-2 shadow md:w-[36rem] xl:w-[70rem]`}
+      >
         {isGroup && showAddForm ? (
           <AddGoalToGroupForm
             groupId={spec.id}
@@ -40,10 +44,9 @@ const GoalInput = ({
             checked={showAddForm}
             onChange={setShowAddForm}
             className={`${
-              showAddForm ? "bg-blue-600" : "bg-gray-200"
+              showAddForm ? "bg-blue-400" : "bg-red-400"
             } relative inline-flex h-6 w-11 items-center rounded-full`}
           >
-            <span className="sr-only">Add existing goal</span>
             <span
               className={`${
                 showAddForm ? "translate-x-6" : "translate-x-1"
