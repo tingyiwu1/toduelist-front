@@ -81,7 +81,7 @@ const Home = () => {
             onChange={setSelectedSpec}
           >
             {/* <RadioGroup.Label>Lists</RadioGroup.Label> */}
-            <div className="">
+            <div>
               {GoalFilter.values.map((goalFilter) => (
                 <RadioGroup.Option
                   value={goalFilter}
@@ -91,7 +91,7 @@ const Home = () => {
                         my-1 flex cursor-pointer rounded-md px-2 py-1`
                   }
                 >
-                  <span className="">{goalFilter.name}</span>
+                  {goalFilter.name}
                 </RadioGroup.Option>
               ))}
             </div>
@@ -105,15 +105,13 @@ const Home = () => {
                     my-1 flex cursor-pointer rounded-md px-2 py-1`
                   }
                 >
-                  <span>{group.name}</span>
+                  {group.name}
                 </RadioGroup.Option>
               ))}
             </div>
           </RadioGroup>
-        </div>
-        <div>
           <button
-            className="rounded-lg p-1 hover:bg-gray-300"
+            className="my-1 w-full rounded-md border px-2 py-0.5 text-center hover:bg-gray-300"
             onClick={handleNewGroup}
           >
             New Group

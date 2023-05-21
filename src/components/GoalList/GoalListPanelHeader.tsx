@@ -40,32 +40,32 @@ function GoalListPanelHeader({
     <div className="flex flex-col items-center">
       <div className="flex w-[32rem] justify-between lg:w-[48rem] xl:w-[64rem]">
         <div className="flex h-20 items-center ">
-          <span className="text-4xl">{spec.name}</span>
+          <span className="text-4xl mr-1">{spec.name}</span>
           {isGroup && (
             <>
               <button
-                className="mx-3 rounded-lg border p-1 hover:bg-gray-300"
+                className="mx-1 rounded-lg p-1 hover:bg-gray-300"
                 onClick={() => setEditDialogSpec(spec)}
               >
                 <PencilIcon className="h-10 w-10" />
               </button>
-              <Menu as="div" className="relative">
+              <Menu as="div">
                 <Menu.Button
                   className={({ open }) =>
                     `${
                       open ? "bg-gray-300" : ""
-                    } mx-3 rounded-lg p-1 hover:bg-gray-300`
+                    } mx-1 rounded-lg p-1 hover:bg-gray-300`
                   }
                 >
                   <UsersIcon className="h-10 w-10" />
                 </Menu.Button>
-                <Menu.Items className="absolute left-full top-0 rounded-md bg-gray-100 p-1">
+                <Menu.Items className="absolute rounded-md bg-gray-50 p-1 shadow-lg">
                   <Menu.Item>
                     {({ active }) => (
                       <button
                         className={`${
                           active ? "bg-red-300" : ""
-                        } block w-full rounded-md px-4 py-2 text-left text-sm text-gray-700`}
+                        } block w-full rounded-md px-4 py-1 text-left text-sm`}
                         onClick={() => setInviteDialogOpen(true)}
                       >
                         <span className="flex items-center">Invite</span>
@@ -77,7 +77,7 @@ function GoalListPanelHeader({
                       <button
                         className={`${
                           active ? "bg-red-300" : ""
-                        } block w-full rounded-md px-4 py-2 text-left text-sm text-gray-700`}
+                        } block w-full rounded-md px-4 py-1 text-left text-sm`}
                         onClick={() => leaveGroup(spec.id)}
                       >
                         <span className="flex items-center">Leave</span>

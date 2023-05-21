@@ -3,7 +3,6 @@ import { getTimeZones } from "@vvo/tzdb";
 
 import { Dialog, Combobox } from "@headlessui/react";
 import { Group } from "../util/interfaces";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 export type EditDialogSpec = Group | "new" | "closed";
 
@@ -81,12 +80,12 @@ const EditGroupDialog = ({
         <div className="flex min-h-full items-center justify-center p-4 text-center">
           <Dialog.Panel className="w-[40rem] overflow-hidden rounded-lg bg-white p-3 text-left align-middle shadow-xl lg:w-[50rem] xl:w-[65rem]">
             <Dialog.Title className="text-lg font-medium">
-              {edit? "Edit": "New"} Group
+              {edit ? "Edit" : "New"} Group
             </Dialog.Title>
             <Dialog.Description className="mt-1">
               <div className="flex flex-col items-stretch">
                 <input
-                  className="bg-gray-50 px-2 py-1 focus:outline-none my-2"
+                  className="my-2 bg-gray-50 px-2 py-1 focus:outline-none"
                   type="text"
                   value={name}
                   placeholder="Group Name"
@@ -112,7 +111,7 @@ const EditGroupDialog = ({
                     {filteredTimeZoneOptions.map((tz) => (
                       <Combobox.Option
                         className={({ selected, active }) =>
-                          `py2 relative cursor-default select-none overflow-hidden text-ellipsis whitespace-nowrap pl-4 pr-4 ${
+                          `relative cursor-default select-none overflow-hidden text-ellipsis whitespace-nowrap pl-4 pr-4 ${
                             selected && active
                               ? "bg-red-400"
                               : selected
@@ -131,7 +130,7 @@ const EditGroupDialog = ({
                   </Combobox.Options>
                 </Combobox>
                 <button
-                  className="rounded-lg p-1 border hover:bg-gray-300"
+                  className="rounded-lg border p-1 hover:bg-gray-300"
                   onClick={handleSave}
                 >
                   {edit ? "Save" : "Create"}

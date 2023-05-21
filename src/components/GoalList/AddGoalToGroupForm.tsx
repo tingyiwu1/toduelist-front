@@ -40,11 +40,11 @@ const AddGoalToGroupForm = ({
         onChange={setSelected}
         nullable
       >
-        <Combobox.Options className="absolute bottom-full mb-1 max-h-80 w-full overflow-auto rounded-md bg-gray-50 py-1 shadow-lg sm:text-sm">
+        <Combobox.Options className="absolute bottom-full mb-1 max-h-80 w-full overflow-auto rounded-md bg-gray-50 py-1 shadow-lg">
           {filteredGoals.map((goal) => (
             <Combobox.Option
               className={({ selected, active }) =>
-                `relative cursor-default select-none py-2 pl-4 pr-4 ${
+                `relative cursor-default select-none pl-4 pr-4 ${
                   selected && active
                     ? "bg-red-400"
                     : selected

@@ -51,7 +51,7 @@ const CommitItem = React.memo(
     };
 
     const handleSave = () => {
-      const hoursNum = parseFloat(hours)
+      const hoursNum = parseFloat(hours);
       if (!description && !hoursNum) return;
       editCommit(commit.id, description, hoursNum || 0);
       setEdit(false);
@@ -91,7 +91,7 @@ const CommitItem = React.memo(
               </button>
             </div>
           ) : (
-            <div className="pl-3 flex justify-between text-ellipsis">
+            <div className="flex justify-between text-ellipsis pl-3">
               <div className="mr-3 flex items-center">
                 <div className="">{commit.description}</div>
                 {commit.description && durationString && (
@@ -102,18 +102,19 @@ const CommitItem = React.memo(
               <div className="flex items-center">
                 <div className="mr-3 whitespace-nowrap">{createdAtString}</div>
 
-                <Menu as="div" className="flex items-center">
-                  <Menu.Button className="rounded-md p-0.5 hover:bg-gray-300">
-                    <EllipsisHorizontalIcon className="h-7 w-7" />
-                  </Menu.Button>
-
-                  <Menu.Items className="absolute flex flex-col self-start bg-red-200">
+                <Menu as="div">
+                  <div className="flex items-center">
+                    <Menu.Button className="z-0 rounded-md p-0.5 hover:bg-gray-300">
+                      <EllipsisHorizontalIcon className="h-7 w-7" />
+                    </Menu.Button>
+                  </div>
+                  <Menu.Items className="absolute z-10 flex flex-col self-start rounded-md bg-gray-50 p-1 shadow-lg">
                     <Menu.Item>
                       {({ active }) => (
                         <button
                           className={`${
-                            active ? "bg-purple-500" : "bg-purple-300"
-                          } block w-full px-4 py-2 text-left`}
+                            active ? "bg-blue-300" : ""
+                          } block w-full rounded-md px-4 py-1 text-left text-sm`}
                           onClick={handleEdit}
                         >
                           <span className="flex items-center">Edit</span>
@@ -124,8 +125,8 @@ const CommitItem = React.memo(
                       {({ active }) => (
                         <button
                           className={`${
-                            active ? "bg-purple-500" : "bg-purple-300"
-                          } block w-full px-4 py-2 text-left`}
+                            active ? "bg-red-300" : ""
+                          } block w-full rounded-md px-4 py-1 text-left text-sm`}
                           onClick={handleDelete}
                         >
                           <span className="flex items-center">Delete</span>
