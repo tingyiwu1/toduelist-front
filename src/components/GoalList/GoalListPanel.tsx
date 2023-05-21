@@ -12,10 +12,12 @@ import GoalList from "./GoalList";
 import InviteDialog from "./InviteDialog";
 import GoalListPanelHeader from "./GoalListPanelHeader";
 import GoalInput from "./GoalInput";
+import { EditDialogSpec } from "../Home/EditGroupDialog";
 
 interface GoalListPanelProps {
   spec: GoalListSpec;
   leaveGroup: (groupId: string) => Promise<void>;
+  setEditDialogSpec: (spec: EditDialogSpec) => void;
 }
 
 export type EditButtonState = "edit" | "delete" | "remove";
@@ -36,7 +38,7 @@ const getFilter = (spec: GoalListSpec) => {
   return filter;
 };
 
-const GoalListPanel = ({ spec, leaveGroup }: GoalListPanelProps) => {
+const GoalListPanel = ({ spec, leaveGroup, setEditDialogSpec }: GoalListPanelProps) => {
   const [editButtonState, setEditButtonState] =
     useState<EditButtonState>("edit");
   const [goals, setGoals] = useState<GoalQueryResult[]>([]);
@@ -161,6 +163,7 @@ const GoalListPanel = ({ spec, leaveGroup }: GoalListPanelProps) => {
       <GoalListPanelHeader
         editButtonState={editButtonState}
         setInviteDialogOpen={setInviteDialogOpen}
+        setEditDialogSpec={setEditDialogSpec}
         setEditButtonState={setEditButtonState}
         spec={spec}
         leaveGroup={leaveGroup}

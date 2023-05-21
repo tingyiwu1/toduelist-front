@@ -116,12 +116,12 @@ const GoalCard = React.memo(
 
     return (
       <>
-        <div className="mb-2 w-80 rounded-md border border-gray-300 bg-white p-2 md:w-[32rem] xl:w-[64rem]">
+        <div className="mb-2 w-[32rem] rounded-md border border-gray-300 bg-white p-2 lg:w-[48rem] xl:w-[64rem]">
           <Disclosure>
             {({ open }) => (
               <>
                 <div className="">
-                  <div className="flex h-10 justify-between items-center">
+                  <div className="flex h-10 items-center justify-between">
                     <div className="flex items-center">
                       <button
                         className="rounded-md p-0.5 hover:bg-gray-300"

@@ -64,7 +64,7 @@ const CommitItem = React.memo(
 
     return (
       <>
-        <div className="my-1 pl-2">
+        <div className="my-1 pl-2 text-sm lg:text-base">
           {edit ? (
             <div className="flex items-center justify-between">
               <textarea

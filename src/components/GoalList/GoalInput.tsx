@@ -28,7 +28,7 @@ const GoalInput = ({
       <div
         className={`${
           isGroup && showAddForm ? "bg-red-300" : "bg-blue-300"
-        } relative right-20 flex w-96 items-center justify-center rounded-md p-2 shadow md:w-[36rem] xl:w-[70rem]`}
+        } relative right-20 flex w-[36rem] items-center justify-center rounded-md p-2 shadow lg:w-[54rem] xl:w-[72rem]`}
       >
         {isGroup && showAddForm ? (
           <AddGoalToGroupForm

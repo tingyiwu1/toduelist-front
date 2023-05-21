@@ -30,7 +30,7 @@ export interface Group {
   name: string;
   timeZone: string;
   joinCode: string;
-  users?: {
+  users: {
     id: string;
     email: string;
     name: string;
