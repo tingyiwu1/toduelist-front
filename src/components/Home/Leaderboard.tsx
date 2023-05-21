@@ -31,17 +31,21 @@ const Leaderboard = ({ groupId }: LeaderboardProps) => {
   }, [load]);
 
   return (
-    <div>
-      <h1>Leaderboard</h1>
-      <button onClick={load}>
-        <ArrowPathIcon className="h-5 w-5" />
-      </button>
-      {leaderboard.map((entry, index) => (
-        <div key={index}>
-          <span>{entry.user.name}</span>
-          <span>{entry.score}</span>
-        </div>
-      ))}
+    <div className="h-60 divide-y overflow-y-auto border-t border-gray-300 p-2">
+      <div className="mb-2 flex h-8 items-center justify-between">
+        <span>Leaderboard</span>
+        <button className="rounded-lg p-1 hover:bg-gray-300" onClick={load}>
+          <ArrowPathIcon className="h-5 w-5" />
+        </button>
+      </div>
+      <div>
+        {leaderboard.map((entry, index) => (
+          <div className="flex justify-between" key={index}>
+            <span>{entry.user.name}</span>
+            <span>{entry.score} hrs</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

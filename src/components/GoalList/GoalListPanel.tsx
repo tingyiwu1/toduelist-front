@@ -16,6 +16,7 @@ import InviteDialog from "./InviteDialog";
 import CreateGoalForm from "./CreateGoalForm";
 import AddGoalToGroupForm from "./AddGoalToGroupForm";
 import GoalListPanelHeader from "./GoalListPanelHeader";
+import GoalInput from "./GoalInput";
 
 interface GoalListPanelProps {
   spec: GoalListSpec;
@@ -62,10 +63,6 @@ const GoalListPanel = ({ spec, leaveGroup }: GoalListPanelProps) => {
     };
     load();
   }, []);
-
-  useEffect(() => {
-    if (!isGroup) setShowAddForm(false);
-  }, [isGroup]);
 
   const createGoal = useCallback(
     async (description: string) => {
@@ -179,33 +176,15 @@ const GoalListPanel = ({ spec, leaveGroup }: GoalListPanelProps) => {
         deleteGoal={deleteGoal}
         removeGoal={removeGoalFromGroup}
       />
-      <div className="fixed bottom-10 ml-5 mr-5">
-        {isGroup && showAddForm ? (
-          <AddGoalToGroupForm
-            groupId={spec.id}
-            goals={goalsNotInList}
-            addGoalToGroup={addGoalToGroup}
-          />
-        ) : (
-          <CreateGoalForm createGoal={createGoal} />
-        )}
-        {isGroup && (
-          <Switch
-            checked={showAddForm}
-            onChange={setShowAddForm}
-            className={`${
-              showAddForm ? "bg-blue-600" : "bg-gray-200"
-            } relative inline-flex h-6 w-11 items-center rounded-full`}
-          >
-            <span className="sr-only">Add existing goal</span>
-            <span
-              className={`${
-                showAddForm ? "translate-x-6" : "translate-x-1"
-              } inline-block h-4 w-4 transform rounded-full bg-white`}
-            />
-          </Switch>
-        )}
-      </div>
+      <GoalInput 
+        spec={spec}
+        goalsNotInList={goalsNotInList}
+        showAddForm={showAddForm}
+        setShowAddForm={setShowAddForm}
+        createGoal={createGoal}
+        addGoalToGroup={addGoalToGroup}
+      />
+      <div className="h-20"></div>
     </>
   );
 };

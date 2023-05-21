@@ -34,47 +34,62 @@ function GoalListPanelHeader({
 
   const isGroup = !(spec instanceof GoalFilter);
   return (
-    <div className="flex justify-between bg-gray-400 ">
-      <div className="flex h-20 items-center bg-gray-500 ">
-        <span className="bg-gray-200">{spec.name}</span>
-        {isGroup && (
-          <Menu>
-            <Menu.Button className="inline-flex bg-gray-200">
-              <UsersIcon className="h-5 w-5" />
-            </Menu.Button>
-            <Menu.Items className="absolute">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? "bg-blue-500" : "bg-gray-100"
-                    } block w-full px-4 py-2 text-left text-sm text-gray-700`}
-                    onClick={() => setInviteDialogOpen(true)}
-                  >
-                    <span className="flex items-center">Invite</span>
-                  </button>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? "bg-blue-500" : "bg-gray-100"
-                    } block w-full px-4 py-2 text-left text-sm text-gray-700`}
-                    onClick={() => leaveGroup(spec.id)}
-                  >
-                    <span className="flex items-center">Leave</span>
-                  </button>
-                )}
-              </Menu.Item>
-            </Menu.Items>
-          </Menu>
-        )}
-      </div>
-      <div className="flex items-center bg-gray-400">
-        <button onClick={handleEdit}>
-          {editButtonState === "edit" ? "Edit" : "Done"}
-        </button>
+    <div className="flex flex-col items-center">
+      <div className="flex w-80 justify-between  xl:w-[64rem]">
+        <div className="flex h-20 items-center ">
+          <span className="text-4xl">{spec.name}</span>
+          {isGroup && (
+            <Menu as="div" className="relative">
+              <Menu.Button
+                className={({ open }) =>
+                  `${
+                    open ? "bg-gray-300" : ""
+                  } mx-3 rounded-lg p-1 hover:bg-gray-300`
+                }
+              >
+                <UsersIcon className="h-10 w-10" />
+              </Menu.Button>
+              <Menu.Items className="absolute left-full top-0 rounded-md bg-gray-100 p-1">
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      className={`${
+                        active ? "bg-red-300" : ""
+                      } block w-full rounded-md px-4 py-2 text-left text-sm text-gray-700`}
+                      onClick={() => setInviteDialogOpen(true)}
+                    >
+                      <span className="flex items-center">Invite</span>
+                    </button>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      className={`${
+                        active ? "bg-red-300" : ""
+                      } block w-full rounded-md px-4 py-2 text-left text-sm text-gray-700`}
+                      onClick={() => leaveGroup(spec.id)}
+                    >
+                      <span className="flex items-center">Leave</span>
+                    </button>
+                  )}
+                </Menu.Item>
+              </Menu.Items>
+            </Menu>
+          )}
+        </div>
+        <div className="flex items-center">
+          <button
+            className={`${
+              editButtonState === "edit"
+                ? "border hover:bg-gray-300"
+                : "bg-blue-300 hover:bg-blue-400"
+            } w-20 rounded-md border-gray-300 py-2 text-xl`}
+            onClick={handleEdit}
+          >
+            {editButtonState === "edit" ? "Edit" : "Done"}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -85,7 +85,7 @@ const CommitItem = React.memo(
             </div>
           ) : (
             <div className="flex justify-between text-ellipsis">
-              <div className="flex">
+              <div className="flex items-center">
                 <div className="bg-purple-300">{commit.description}</div>
                 {commit.description && durationString && (
                   <div className="w-3 flex-grow-0 bg-red-300"></div>

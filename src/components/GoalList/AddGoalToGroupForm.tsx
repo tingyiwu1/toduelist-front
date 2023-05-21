@@ -32,27 +32,33 @@ const AddGoalToGroupForm = ({
           goal.description.toLowerCase().includes(query.toLowerCase())
         );
   return (
-    <div className="mr-10 bg-gray-50">
-      <Combobox value={selected} onChange={setSelected} nullable>
-        <Combobox.Options className="">
+    <div className="flex flex-grow bg-gray-300">
+      <Combobox
+        as="div"
+        className="relative flex-grow bg-blue-300"
+        value={selected}
+        onChange={setSelected}
+        nullable
+      >
+        <Combobox.Options className="absolute bottom-full w-full">
           {filteredGoals.map((goal) => (
             <Combobox.Option key={goal.id} value={goal}>
               {goal.description}
             </Combobox.Option>
           ))}
         </Combobox.Options>
-        <div className="relative w-full">
-          <Combobox.Input
-            onChange={(e) => setQuery(e.target.value)}
-            displayValue={(g: GoalQueryResult | null) =>
-              g === null ? "" : g.description
-            }
-            placeholder="Add existing goal"
-          />
-          <Combobox.Button className="absolute inset-y-0 right-0 pr-2">
-            <ChevronUpIcon className="h-5 w-5" />
-          </Combobox.Button>
-        </div>
+        <Combobox.Input
+          className="w-full"
+          onChange={(e) => setQuery(e.target.value)}
+          displayValue={(g: GoalQueryResult | null) =>
+            g === null ? "" : g.description
+          }
+          placeholder="Add existing goal"
+        />
+
+        <Combobox.Button className="absolute inset-y-0 right-0 pr-2">
+          <ChevronUpIcon className="h-5 w-5" />
+        </Combobox.Button>
       </Combobox>
       <button onClick={handleAdd}>
         <PlusCircleIcon className="h-5 w-5" />

@@ -117,7 +117,7 @@ const GoalCard = React.memo(
 
     return (
       <>
-        <div className="my-3 p-3 bg-orange-200">
+        <div className="mb-2 w-80 bg-orange-200 p-2 md:w-[32rem] xl:w-[64rem]">
           <Disclosure>
             {({ open }) => (
               <>

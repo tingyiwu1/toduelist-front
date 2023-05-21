@@ -16,8 +16,9 @@ const CreateGoalForm = ({ createGoal }: CreateGoalFormProps) => {
   }, [description]);
 
   return (
-    <>
+    <div className="flex flex-grow items-center bg-purple-300">
       <input
+        className="flex-grow"
         type="text"
         value={description}
         placeholder="New goal"
@@ -26,7 +27,7 @@ const CreateGoalForm = ({ createGoal }: CreateGoalFormProps) => {
       <button onClick={handleSubmit}>
         <PlusCircleIcon className="h-5 w-5" />
       </button>
-    </>
+    </div>
   );
 };
 
