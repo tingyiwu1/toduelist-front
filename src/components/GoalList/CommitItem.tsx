@@ -21,11 +21,12 @@ const CommitItem = React.memo(
   ({ commit, editCommit, deleteCommit }: CommitItemProps) => {
     const [edit, setEdit] = useState<boolean>(false);
     const [description, setDescription] = useState<string>(commit.description);
-    const [hours, setHours] = useState<number>(commit.hours);
+    const [hours, setHours] = useState<string>(commit.hours.toString());
 
     const durationString = useMemo(() => {
+      const hoursStr = commit.hours.toString();
       if (commit.hours === 0) return "";
-      return `${hours} hr${hours === 1 ? "" : "s"}`;
+      return `${hoursStr} hr${hoursStr === "1" ? "" : "s"}`;
     }, [commit.hours]);
 
     const createdAtString = useMemo(() => {
@@ -50,8 +51,10 @@ const CommitItem = React.memo(
     };
 
     const handleSave = () => {
+      const hoursNum = parseFloat(hours)
+      if (!description && !hoursNum) return;
+      editCommit(commit.id, description, hoursNum || 0);
       setEdit(false);
-      editCommit(commit.id, description, hours);
     };
 
     const handleDelete = () => {
@@ -61,47 +64,47 @@ const CommitItem = React.memo(
 
     return (
       <>
-        <div className=" bg-green-100">
+        <div className="my-1 pl-2">
           {edit ? (
-            <div className="flex justify-between">
+            <div className="flex items-center justify-between">
               <textarea
-                className="flex-grow"
-                // type="text"
+                className="flex-grow border-r bg-gray-50 px-3 py-1 focus:outline-none"
                 rows={1}
                 value={description}
+                placeholder="Description"
                 onChange={(e) =>
                   setDescription(e.target.value.replace(/\n/g, ""))
                 }
               />
               <input
-                className="w-10"
+                className="w-14 bg-gray-50 py-1 pl-3 focus:outline-none"
                 type="number"
                 value={hours}
-                onChange={(e) => setHours(parseInt(e.target.value))}
+                placeholder="hrs"
+                onChange={(e) => setHours(e.target.value)}
               />
-              <button onClick={handleSave}>
-                <CheckIcon className="h-5 w-5" />
+              <button
+                className="rounded-md p-0.5 hover:bg-gray-300"
+                onClick={handleSave}
+              >
+                <CheckIcon className="h-7 w-7" />
               </button>
             </div>
           ) : (
-            <div className="flex justify-between text-ellipsis">
-              <div className="flex items-center">
-                <div className="bg-purple-300">{commit.description}</div>
+            <div className="pl-3 flex justify-between text-ellipsis">
+              <div className="mr-3 flex items-center">
+                <div className="">{commit.description}</div>
                 {commit.description && durationString && (
-                  <div className="w-3 flex-grow-0 bg-red-300"></div>
+                  <div className="w-3 flex-grow-0 "></div>
                 )}
-                <div className="whitespace-nowrap bg-blue-300 italic">
-                  {durationString}
-                </div>
+                <div className="whitespace-nowrap italic">{durationString}</div>
               </div>
               <div className="flex items-center">
-                <div className="whitespace-nowrap bg-yellow-300">
-                  {createdAtString}
-                </div>
+                <div className="mr-3 whitespace-nowrap">{createdAtString}</div>
 
                 <Menu as="div" className="flex items-center">
-                  <Menu.Button className="bg-gray-300">
-                    <EllipsisHorizontalIcon className="h-5 w-5" />
+                  <Menu.Button className="rounded-md p-0.5 hover:bg-gray-300">
+                    <EllipsisHorizontalIcon className="h-7 w-7" />
                   </Menu.Button>
 
                   <Menu.Items className="absolute flex flex-col self-start bg-red-200">

@@ -48,7 +48,6 @@ const GoalCard = React.memo(
 
     useEffect(() => {
       const load = async () => {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
         const res = await axios.post("goals/getGoal", {
           id: goalId,
         });
@@ -67,6 +66,7 @@ const GoalCard = React.memo(
     };
 
     const handleSave = () => {
+      if (!descriptionInput) return;
       setEdit(false);
       editGoal(goalId, descriptionInput, completed);
     };
@@ -117,56 +117,77 @@ const GoalCard = React.memo(
 
     return (
       <>
-        <div className="mb-2 w-80 bg-orange-200 p-2 md:w-[32rem] xl:w-[64rem]">
+        <div className="mb-2 w-80 rounded-md border border-gray-300 bg-white p-2 md:w-[32rem] xl:w-[64rem]">
           <Disclosure>
             {({ open }) => (
               <>
-                <div className=" bg-red-300">
-                  <div className="flex h-10 justify-between bg-green-200">
-                    <button onClick={handleComplete}>
-                      {completed ? (
-                        <SolidCheckCircleIcon className="h-5 w-5" />
-                      ) : (
-                        <OutlineCheckCircleIcon className="h-5 w-5" />
-                      )}
-                    </button>
+                <div className="">
+                  <div className="flex h-10 justify-between items-center">
+                    <div className="flex items-center">
+                      <button
+                        className="rounded-md p-0.5 hover:bg-gray-300"
+                        onClick={handleComplete}
+                      >
+                        {completed ? (
+                          <SolidCheckCircleIcon className="h-7 w-7" />
+                        ) : (
+                          <OutlineCheckCircleIcon className="h-7 w-7" />
+                        )}
+                      </button>
+                    </div>
                     {edit ? (
                       <>
                         <input
-                          className="flex-grow bg-gray-100"
+                          className="flex-grow border-r bg-gray-50 px-2 py-1 focus:outline-none"
                           type="text"
+                          placeholder="Goal name"
                           value={descriptionInput}
                           onChange={(e) => setDescriptionInput(e.target.value)}
                         />
-                        <button onClick={handleSave}>
-                          <CheckIcon className="h-5 w-5" />
+                        <button
+                          className="rounded-md p-0.5 hover:bg-gray-300"
+                          onClick={handleSave}
+                        >
+                          <CheckIcon className="h-7 w-7" />
                         </button>
                       </>
                     ) : (
                       <>
                         <Disclosure.Button
                           as="div"
-                          className="flex flex-grow items-center bg-blue-300 hover:cursor-pointer"
+                          className="flex flex-grow items-center pl-2 hover:cursor-pointer"
                         >
                           {description}
                         </Disclosure.Button>
                         <div className="flex items-center">
                           {editButtonState === "edit" ? (
-                            <PencilSquareIcon
-                              className="h-5 w-5 hover:cursor-pointer"
+                            <button
+                              className="rounded-md p-0.5 hover:bg-gray-300"
                               onClick={handleEdit}
-                            />
+                            >
+                              <PencilSquareIcon className="h-7 w-7" />
+                            </button>
                           ) : editButtonState === "delete" ? (
-                            <TrashIcon
-                              className="h-5 w-5 hover:cursor-pointer"
-                              onClick={handleDelete}
-                            />
+                            <button
+                              className="rounded-md p-0.5 hover:bg-gray-300"
+                              onClick={handleEdit}
+                            >
+                              <TrashIcon
+                                className="h-7 w-7 hover:cursor-pointer"
+                                onClick={handleDelete}
+                              />
+                            </button>
                           ) : (
                             // editButtonState === 'remove'
-                            <FolderMinusIcon
-                              className="h-5 w-5 hover:cursor-pointer"
-                              onClick={handleRemove}
-                            />
+                            <button
+                              className="rounded-md p-0.5 hover:bg-gray-300"
+                              onClick={handleEdit}
+                            >
+                              <FolderMinusIcon
+                                className="h-7 w-7 hover:cursor-pointer"
+                                onClick={handleRemove}
+                              />
+                            </button>
                           )}
                         </div>
                       </>

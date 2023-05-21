@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 
-import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
 interface CreateCommitFormProps {
   createCommit: (description: string, hours: number) => void;
@@ -19,24 +19,26 @@ const CreateCommitForm = ({ createCommit }: CreateCommitFormProps) => {
   }, [description, hours]);
 
   return (
-    <div className=" ml-5 flex items-center justify-between bg-purple-300">
+    <div className=" ml-8 flex items-center justify-between bg-gray-50">
       <input
-        className="flex-grow"
+        className="flex-grow border-r bg-gray-50 px-2 py-1 focus:outline-none"
         type="text"
         value={description}
         placeholder="Add commit"
         onChange={(e) => setDescription(e.target.value)}
       />
       <input
-        className="w-10"
+        className=" w-14 bg-gray-50 py-1 pl-3 focus:outline-none"
         type="number"
         value={hours}
         min="0"
         placeholder="hrs"
         onChange={(e) => setHours(e.target.value)}
       />
-      <button onClick={handleSubmit}>
-        <PlusCircleIcon className="h-5 w-5" />
+      <button 
+        className="rounded-md p-0.5 hover:bg-gray-300"
+        onClick={handleSubmit}>
+        <PlusCircleIcon className="h-7 w-7" />
       </button>
     </div>
   );
