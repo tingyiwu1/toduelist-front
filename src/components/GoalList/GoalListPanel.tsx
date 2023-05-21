@@ -1,11 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { Switch, Menu, Dialog } from "@headlessui/react";
-import { UsersIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
 
 import {
   GoalQueryResult,
-  Goal,
   GoalListSpec,
   GoalFilter,
   Group,
@@ -13,8 +10,6 @@ import {
 
 import GoalList from "./GoalList";
 import InviteDialog from "./InviteDialog";
-import CreateGoalForm from "./CreateGoalForm";
-import AddGoalToGroupForm from "./AddGoalToGroupForm";
 import GoalListPanelHeader from "./GoalListPanelHeader";
 import GoalInput from "./GoalInput";
 
@@ -176,7 +171,7 @@ const GoalListPanel = ({ spec, leaveGroup }: GoalListPanelProps) => {
         deleteGoal={deleteGoal}
         removeGoal={removeGoalFromGroup}
       />
-      <GoalInput 
+      <GoalInput
         spec={spec}
         goalsNotInList={goalsNotInList}
         showAddForm={showAddForm}

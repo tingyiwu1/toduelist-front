@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Disclosure, Menu } from "@headlessui/react";
+import { Disclosure } from "@headlessui/react";
 import {
-  EllipsisHorizontalIcon,
   CheckCircleIcon as SolidCheckCircleIcon,
   PencilSquareIcon,
   TrashIcon,
@@ -11,7 +10,7 @@ import {
 import { CheckCircleIcon as OutlineCheckCircleIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 
-import { Goal, Commit } from "../util/interfaces";
+import { Commit } from "../util/interfaces";
 import { EditButtonState } from "./GoalListPanel";
 
 import CommitItem from "./CommitItem";
