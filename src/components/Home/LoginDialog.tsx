@@ -27,7 +27,6 @@ const LoginDialog = ({ user, setUser }: LoginDialogProps) => {
                   email: decoded.email,
                   pictureUrl: decoded.picture,
                 };
-                console.log(decoded);
                 setUser(user);
               }}
               useOneTap

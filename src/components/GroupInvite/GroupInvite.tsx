@@ -33,22 +33,17 @@ const GroupInvite = ({ user }: GroupInviteProps) => {
   return (
     <div className="mt-14">
       {user && (
-        <>
-          {/* <div className="fixed inset-0 bg-black bg-opacity-25" /> */}
-          {/* <div className="fixed inset-0 flex items-center justify-center"> */}
-          <div className="flex flex-col items-stretch rounded-lg bg-white p-4">
-            <div className="text-center text-lg font-medium">
-              You have been invited to join {group?.name}
-            </div>
-            <button
-              className="rounded-lg border p-1 hover:bg-gray-300"
-              onClick={handleJoinGroup}
-            >
-              Join
-            </button>
+        <div className="flex flex-col items-stretch rounded-lg bg-white p-4">
+          <div className="text-center text-lg font-medium">
+            You have been invited to join {group?.name}
           </div>
-          {/* </div> */}
-        </>
+          <button
+            className="rounded-lg border p-1 hover:bg-gray-300"
+            onClick={handleJoinGroup}
+          >
+            Join
+          </button>
+        </div>
       )}
     </div>
   );
