@@ -8,7 +8,7 @@ import GroupInvite from "./components/GroupInvite/GroupInvite";
 import LoginDialog from "./components/Home/LoginDialog";
 
 import "./App.css";
-import { GoogleUser } from "./components/util/interfaces";
+import { User } from "./components/util/interfaces";
 import ImpersonateDialog from "./components/Home/ImpersonateDialog";
 import Navbar from "./components/Navbar/Navbar";
 
@@ -22,10 +22,10 @@ function App() {
     axios.defaults.baseURL = "http://localhost:3000";
   }
 
-  const [user, setUser] = useState<GoogleUser>();
+  const [user, setUser] = useState<User>();
   const [impersonateDialogOpen, setImpersonateDialogOpen] =
     useState<boolean>(false);
-  const [impersonatedUser, setImpersonatedUser] = useState<GoogleUser>();
+  const [impersonatedUser, setImpersonatedUser] = useState<User>();
 
   useEffect(() => {
     if (!user) return;

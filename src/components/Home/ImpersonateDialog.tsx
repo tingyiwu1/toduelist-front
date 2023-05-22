@@ -1,13 +1,13 @@
 import { Dialog, RadioGroup } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import { GoogleUser } from "../util/interfaces";
+import { User } from "../util/interfaces";
 import axios from "axios";
 
 interface ImpersonateDialogProps {
   open: boolean;
-  user?: GoogleUser;
-  impersonatedUser?: GoogleUser;
-  setImpersonatedUser: (user: GoogleUser | undefined) => void;
+  user?: User;
+  impersonatedUser?: User;
+  setImpersonatedUser: (user: User | undefined) => void;
   setOpen: (open: boolean) => void;
 }
 
@@ -18,8 +18,8 @@ const ImpersonateDialog = ({
   setImpersonatedUser,
   setOpen,
 }: ImpersonateDialogProps) => {
-  const [selectedUser, setSelectedUser] = useState<GoogleUser>();
-  const [fakeUsers, setFakeUsers] = useState<GoogleUser[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User>();
+  const [fakeUsers, setFakeUsers] = useState<User[]>([]);
 
   useEffect(() => {
     if (!user) return;
@@ -63,7 +63,9 @@ const ImpersonateDialog = ({
                       {({ checked }) => (
                         <span
                           className={`flex items-center text-lg ${
-                            checked ? "bg-red-300 hover:bg-red-400" : "hover:bg-gray-200"
+                            checked
+                              ? "bg-red-300 hover:bg-red-400"
+                              : "hover:bg-gray-200"
                           }`}
                         >
                           {user.name}
@@ -72,7 +74,10 @@ const ImpersonateDialog = ({
                     </RadioGroup.Option>
                   ))}
                 </RadioGroup>
-                <button className="rounded-lg border p-1 hover:bg-gray-300" onClick={handleSave}>
+                <button
+                  className="rounded-lg border p-1 hover:bg-gray-300"
+                  onClick={handleSave}
+                >
                   Save
                 </button>
               </div>

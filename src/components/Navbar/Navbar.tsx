@@ -1,10 +1,10 @@
 import { Menu } from "@headlessui/react";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
-import { GoogleUser } from "../util/interfaces";
+import { User } from "../util/interfaces";
 
 interface NavbarProps {
-  user?: GoogleUser;
-  impersonatedUser?: GoogleUser;
+  user?: User;
+  impersonatedUser?: User;
   setImpersonateDialogOpen: (open: boolean) => void;
   handleLogout: () => void;
 }

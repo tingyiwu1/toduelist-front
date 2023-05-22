@@ -6,7 +6,7 @@ import {
   GoalListSpec,
   GoalFilter,
   Group,
-  GoogleUser,
+  User,
 } from "../util/interfaces";
 
 import GoalList from "./GoalList";
@@ -16,7 +16,7 @@ import GoalInput from "./GoalInput";
 import { EditDialogSpec } from "../Home/EditGroupDialog";
 
 interface GoalListPanelProps {
-  user?: GoogleUser;
+  user?: User;
   spec: GoalListSpec;
   leaveGroup: (groupId: string) => Promise<void>;
   setEditDialogSpec: (spec: EditDialogSpec) => void;

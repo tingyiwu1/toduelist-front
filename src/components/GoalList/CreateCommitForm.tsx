@@ -35,9 +35,10 @@ const CreateCommitForm = ({ createCommit }: CreateCommitFormProps) => {
         placeholder="hrs"
         onChange={(e) => setHours(e.target.value)}
       />
-      <button 
+      <button
         className="rounded-md p-0.5 hover:bg-gray-300"
-        onClick={handleSubmit}>
+        onClick={handleSubmit}
+      >
         <PlusCircleIcon className="h-7 w-7" />
       </button>
     </div>

@@ -2,11 +2,11 @@ import { Dialog } from "@headlessui/react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import jwt from "jwt-decode";
-import { GoogleUser } from "../util/interfaces";
+import { User } from "../util/interfaces";
 
 interface LoginDialogProps {
-  user?: GoogleUser;
-  setUser: (user: GoogleUser) => void;
+  user?: User;
+  setUser: (user: User) => void;
 }
 
 const LoginDialog = ({ user, setUser }: LoginDialogProps) => {
@@ -21,7 +21,7 @@ const LoginDialog = ({ user, setUser }: LoginDialogProps) => {
               onSuccess={(res) => {
                 axios.defaults.headers.common["Authorization"] = res.credential;
                 const decoded: any = jwt(res.credential ?? "");
-                const user: GoogleUser = {
+                const user: User = {
                   id: decoded.sub,
                   name: decoded.name,
                   email: decoded.email,

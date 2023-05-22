@@ -6,7 +6,7 @@ import {
   Group,
   GoalListSpec,
   GoalFilter,
-  GoogleUser,
+  User,
 } from "../util/interfaces";
 
 import GoalListPanel from "../GoalList/GoalListPanel";
@@ -14,7 +14,7 @@ import Leaderboard from "./Leaderboard";
 import EditGroupDialog, { EditDialogSpec } from "./EditGroupDialog";
 
 interface HomeProps {
-  user?: GoogleUser;
+  user?: User;
 }
 
 const Home = ({ user }: HomeProps) => {

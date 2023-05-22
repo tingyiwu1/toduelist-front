@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { GoogleUser, Group } from "../util/interfaces";
+import { User, Group } from "../util/interfaces";
 
 interface GroupInviteProps {
-  user?: GoogleUser;
+  user?: User;
 }
 
 const GroupInvite = ({ user }: GroupInviteProps) => {
