@@ -40,7 +40,7 @@ function GoalListPanelHeader({
     <div className="flex flex-col items-center">
       <div className="flex w-[32rem] justify-between lg:w-[48rem] xl:w-[64rem]">
         <div className="flex h-20 items-center ">
-          <span className="text-4xl mr-1">{spec.name}</span>
+          <span className="mr-1 text-4xl">{spec.name}</span>
           {isGroup && (
             <>
               <button

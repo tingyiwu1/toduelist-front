@@ -92,7 +92,6 @@ const GoalCard = React.memo(
 
     const editCommit = useCallback(
       async (commitId: string, description: string, hours: number) => {
-        console.log(commitId, description, hours);
         const res = await axios.post(`/goals/editCommit`, {
           id: commitId,
           description: description,

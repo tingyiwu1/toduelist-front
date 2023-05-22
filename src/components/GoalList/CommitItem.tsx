@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Menu } from "@headlessui/react";
 import { EllipsisHorizontalIcon, CheckIcon } from "@heroicons/react/24/solid";
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
 import RelativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(RelativeTime);
 
@@ -59,7 +59,6 @@ const CommitItem = React.memo(
 
     const handleDelete = () => {
       deleteCommit(commit.id);
-      console.log("delete");
     };
 
     return (

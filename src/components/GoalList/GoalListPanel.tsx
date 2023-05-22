@@ -38,7 +38,11 @@ const getFilter = (spec: GoalListSpec) => {
   return filter;
 };
 
-const GoalListPanel = ({ spec, leaveGroup, setEditDialogSpec }: GoalListPanelProps) => {
+const GoalListPanel = ({
+  spec,
+  leaveGroup,
+  setEditDialogSpec,
+}: GoalListPanelProps) => {
   const [editButtonState, setEditButtonState] =
     useState<EditButtonState>("edit");
   const [goals, setGoals] = useState<GoalQueryResult[]>([]);
@@ -84,7 +88,6 @@ const GoalListPanel = ({ spec, leaveGroup, setEditDialogSpec }: GoalListPanelPro
 
   const editGoal = useCallback(
     async (goalId: string, description: string, completed: boolean) => {
-      console.log(completed);
       const res = await axios.post(`/goals/editGoal`, {
         id: goalId,
         description: description,
@@ -96,7 +99,6 @@ const GoalListPanel = ({ spec, leaveGroup, setEditDialogSpec }: GoalListPanelPro
         completed: res.data.completed,
         groups: res.data.groups,
       };
-      console.log(updatedGoal);
       setGoals((goals) =>
         goals.map((item) => (item.id === updatedGoal.id ? updatedGoal : item))
       );
