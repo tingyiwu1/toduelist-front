@@ -31,7 +31,7 @@ const Leaderboard = ({ groupId }: LeaderboardProps) => {
   }, [load]);
 
   return (
-    <div className="h-60 divide-y overflow-y-auto border-t border-gray-300 p-2">
+    <div className="h-60 divide-y overflow-y-auto border-t border-gray-300 p-2 pb-6">
       <div className="mb-2 flex h-8 items-center justify-between">
         <span>Leaderboard</span>
         <button className="rounded-lg p-1 hover:bg-gray-300" onClick={load}>

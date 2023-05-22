@@ -2,12 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { RadioGroup } from "@headlessui/react";
 import axios from "axios";
 
-import {
-  Group,
-  GoalListSpec,
-  GoalFilter,
-  User,
-} from "../util/interfaces";
+import { Group, GoalListSpec, GoalFilter, User } from "../util/interfaces";
 
 import GoalListPanel from "../GoalList/GoalListPanel";
 import Leaderboard from "./Leaderboard";
@@ -90,7 +85,6 @@ const Home = ({ user }: HomeProps) => {
             value={selectedSpec}
             onChange={setSelectedSpec}
           >
-            {/* <RadioGroup.Label>Lists</RadioGroup.Label> */}
             <div>
               {GoalFilter.values.map((goalFilter) => (
                 <RadioGroup.Option
@@ -115,7 +109,9 @@ const Home = ({ user }: HomeProps) => {
                     my-1 flex cursor-pointer rounded-md px-2 py-1`
                   }
                 >
-                  {group.name}
+                  <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+                    {group.name}
+                  </span>
                 </RadioGroup.Option>
               ))}
             </div>
