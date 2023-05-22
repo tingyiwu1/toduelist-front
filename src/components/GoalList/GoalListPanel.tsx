@@ -12,7 +12,7 @@ import {
 import GoalList from "./GoalList";
 import InviteDialog from "./InviteDialog";
 import GoalListPanelHeader from "./GoalListPanelHeader";
-import GoalInput from "./GoalInput";
+import GoalInput from "./GoalInput/GoalInput";
 import { EditDialogSpec } from "../Home/EditGroupDialog";
 
 interface GoalListPanelProps {

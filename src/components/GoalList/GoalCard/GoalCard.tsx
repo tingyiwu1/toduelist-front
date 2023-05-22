@@ -10,8 +10,8 @@ import {
 import { CheckCircleIcon as OutlineCheckCircleIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 
-import { Commit } from "../util/interfaces";
-import { EditButtonState } from "./GoalListPanel";
+import { Commit } from "../../util/interfaces";
+import { EditButtonState } from "../GoalListPanel";
 
 import CommitItem from "./CommitItem";
 import CreateCommitForm from "./CreateCommitForm";

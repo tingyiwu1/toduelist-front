@@ -1,7 +1,7 @@
 import { GoalQueryResult } from "../util/interfaces";
 import { EditButtonState } from "./GoalListPanel";
 
-import GoalCard from "./GoalCard";
+import GoalCard from "./GoalCard/GoalCard";
 
 interface GoalListProps {
   goals: GoalQueryResult[];

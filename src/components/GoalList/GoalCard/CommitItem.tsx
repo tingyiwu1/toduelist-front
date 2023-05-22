@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import RelativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(RelativeTime);
 
-import { Commit } from "../util/interfaces";
+import { Commit } from "../../util/interfaces";
 
 interface CommitItemProps {
   commit: Commit;

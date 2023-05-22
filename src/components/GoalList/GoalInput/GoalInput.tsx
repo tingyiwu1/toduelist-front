@@ -1,7 +1,11 @@
 import React from "react";
 import { Switch } from "@headlessui/react";
 
-import { GoalFilter, GoalListSpec, GoalQueryResult } from "../util/interfaces";
+import {
+  GoalFilter,
+  GoalListSpec,
+  GoalQueryResult,
+} from "../../util/interfaces";
 import CreateGoalForm from "./CreateGoalForm";
 import AddGoalToGroupForm from "./AddGoalToGroupForm";
 
