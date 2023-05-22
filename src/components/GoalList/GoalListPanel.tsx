@@ -6,6 +6,7 @@ import {
   GoalListSpec,
   GoalFilter,
   Group,
+  GoogleUser,
 } from "../util/interfaces";
 
 import GoalList from "./GoalList";
@@ -15,6 +16,7 @@ import GoalInput from "./GoalInput";
 import { EditDialogSpec } from "../Home/EditGroupDialog";
 
 interface GoalListPanelProps {
+  user?: GoogleUser;
   spec: GoalListSpec;
   leaveGroup: (groupId: string) => Promise<void>;
   setEditDialogSpec: (spec: EditDialogSpec) => void;
@@ -39,6 +41,7 @@ const getFilter = (spec: GoalListSpec) => {
 };
 
 const GoalListPanel = ({
+  user,
   spec,
   leaveGroup,
   setEditDialogSpec,
@@ -58,12 +61,16 @@ const GoalListPanel = ({
   );
 
   useEffect(() => {
+    if (!user) {
+      setGoals([]);
+      return;
+    }
     const load = async () => {
       const res = await axios.get(`/goals/goalQuery`);
       setGoals(res.data);
     };
     load();
-  }, []);
+  }, [user]);
 
   const createGoal = useCallback(
     async (description: string) => {

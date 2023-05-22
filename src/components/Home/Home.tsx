@@ -2,13 +2,22 @@ import { useState, useEffect, useCallback } from "react";
 import { RadioGroup } from "@headlessui/react";
 import axios from "axios";
 
-import { Group, GoalListSpec, GoalFilter } from "../util/interfaces";
+import {
+  Group,
+  GoalListSpec,
+  GoalFilter,
+  GoogleUser,
+} from "../util/interfaces";
 
 import GoalListPanel from "../GoalList/GoalListPanel";
 import Leaderboard from "./Leaderboard";
 import EditGroupDialog, { EditDialogSpec } from "./EditGroupDialog";
 
-const Home = () => {
+interface HomeProps {
+  user?: GoogleUser;
+}
+
+const Home = ({ user }: HomeProps) => {
   const [selectedSpec, setSelectedSpec] = useState<GoalListSpec>(
     GoalFilter.ALL
   );
@@ -17,12 +26,17 @@ const Home = () => {
     useState<EditDialogSpec>("closed");
 
   useEffect(() => {
+    if (!user) {
+      setGroups([]);
+      setSelectedSpec(GoalFilter.ALL);
+      return;
+    }
     const load = async () => {
       const res = await axios.get(`/groups/allGroups`);
       setGroups(res.data);
     };
     load();
-  }, []);
+  }, [user]);
 
   const handleNewGroup = () => {
     setEditDialogSpec("new");
@@ -69,11 +83,7 @@ const Home = () => {
         editGroup={editGroup}
       />
 
-      <div className="fixed left-0 top-0 flex h-10 w-screen flex-row bg-gray-100">
-        <div>toduelist</div>
-      </div>
-
-      <div className="fixed left-0 top-10 m-0 flex h-screen w-40 flex-col justify-between bg-gray-50 shadow">
+      <div className="fixed left-0 top-14 m-0 flex h-screen w-40 flex-col justify-between bg-gray-50 shadow">
         <div className=" overflow-y-auto">
           <RadioGroup
             className="divide-y divide-gray-300"
@@ -123,8 +133,9 @@ const Home = () => {
           </div>
         )}
       </div>
-      <div className="ml-40 mt-10">
+      <div className="ml-40 mt-14">
         <GoalListPanel
+          user={user}
           spec={selectedSpec}
           leaveGroup={leaveGroup}
           setEditDialogSpec={setEditDialogSpec}

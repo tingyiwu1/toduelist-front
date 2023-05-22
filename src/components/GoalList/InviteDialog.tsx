@@ -9,7 +9,7 @@ interface InviteDialogProps {
 }
 
 const InviteDialog = ({ open, group, setOpen, joinCode }: InviteDialogProps) => {
-  const url = window.location.origin + "/join/" + joinCode;
+  const url = window.location.origin + "/toduelist-front/join/" + joinCode;
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <div className="fixed inset-0 bg-black bg-opacity-25" />

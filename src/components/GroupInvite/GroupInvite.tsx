@@ -2,9 +2,13 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { Group } from "../util/interfaces";
+import { GoogleUser, Group } from "../util/interfaces";
 
-const GroupInvite = () => {
+interface GroupInviteProps {
+  user?: GoogleUser;
+}
+
+const GroupInvite = ({ user }: GroupInviteProps) => {
   const { join_code } = useParams();
   const navigate = useNavigate();
 
@@ -18,7 +22,7 @@ const GroupInvite = () => {
       setGroup(res.data);
     };
     load();
-  }, [join_code]);
+  }, [join_code, user]);
 
   const handleJoinGroup = async () => {
     await axios.post(`/groups/joinGroup`, {
@@ -27,10 +31,26 @@ const GroupInvite = () => {
     navigate(`/`);
   };
   return (
-    <>
-      <h1>You have been invited to join {group?.name}</h1>
-      <button onClick={handleJoinGroup}>Join</button>
-    </>
+    <div className="mt-14">
+      {user && (
+        <>
+          {/* <div className="fixed inset-0 bg-black bg-opacity-25" /> */}
+          {/* <div className="fixed inset-0 flex items-center justify-center"> */}
+          <div className="flex flex-col items-stretch rounded-lg bg-white p-4">
+            <div className="text-center text-lg font-medium">
+              You have been invited to join {group?.name}
+            </div>
+            <button
+              className="rounded-lg border p-1 hover:bg-gray-300"
+              onClick={handleJoinGroup}
+            >
+              Join
+            </button>
+          </div>
+          {/* </div> */}
+        </>
+      )}
+    </div>
   );
 };
 

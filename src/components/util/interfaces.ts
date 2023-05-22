@@ -1,3 +1,10 @@
+export interface GoogleUser {
+    id: string
+    name: string
+    email: string
+    pictureUrl?: string
+}
+
 export interface GoalQueryResult {
   id: string;
   description: string;
